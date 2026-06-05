@@ -118,34 +118,6 @@
       touch-action: manipulation;
     }
 
-    /* Flag mode toggle button */
-    #flag-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(13, 60, 100, 0.7);
-      border: 2px solid #2a7aaa;
-      color: #7dd8f8;
-      padding: 8px 18px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-family: 'Georgia', serif;
-      font-size: 0.85rem;
-      margin-bottom: 10px;
-      transition: all 0.2s;
-      touch-action: manipulation;
-      letter-spacing: 1px;
-    }
-
-    #flag-btn.active {
-      background: rgba(248, 200, 50, 0.15);
-      border-color: #f8c832;
-      color: #f8c832;
-      box-shadow: 0 0 14px rgba(248, 200, 50, 0.3);
-    }
-
-    #flag-btn .flag-icon { font-size: 1.1rem; }
-
     .board-wrapper {
       background: rgba(5, 20, 45, 0.5);
       border: 2px solid #2a5a7a;
@@ -367,18 +339,13 @@
   </div>
 </div>
 
-<button id="flag-btn" onclick="toggleFlagMode()">
-  <span class="flag-icon">🍖</span>
-  <span id="flag-btn-label">Treat Mode: OFF</span>
-</button>
-
 <div class="board-wrapper">
   <div id="board"></div>
 </div>
 
 <div class="legend">
   <span>Tap = Reveal</span>
-  <span>🍖 Treat Mode = Flag</span>
+  <span>Double-tap = 🍖 Flag</span>
   <span>🦑 = Lurking</span>
   <span>🐙 = Revealed</span>
 </div>
@@ -407,15 +374,6 @@
   let gameOver = false, gameWon = false, firstClick = true;
   let timerInterval = null, seconds = 0;
   let flagCount = 0;
-  let flagMode = false;
-
-  function toggleFlagMode() {
-    flagMode = !flagMode;
-    const btn = document.getElementById('flag-btn');
-    const label = document.getElementById('flag-btn-label');
-    btn.classList.toggle('active', flagMode);
-    label.textContent = flagMode ? 'Treat Mode: ON' : 'Treat Mode: OFF';
-  }
 
   function cellSize() {
     // Fit the board to screen width with a bit of padding
@@ -441,9 +399,6 @@
     seconds = 0;
     document.getElementById('timer').textContent = '0';
     gameOver = false; gameWon = false; firstClick = true; flagCount = 0;
-    flagMode = false;
-    document.getElementById('flag-btn').classList.remove('active');
-    document.getElementById('flag-btn-label').textContent = 'Treat Mode: OFF';
 
     const cfg = DIFFICULTIES[difficulty];
     rows = cfg.rows; cols = cfg.cols; mineCount = cfg.mines;
@@ -503,39 +458,28 @@
         cell.style.height = `${sz}px`;
         cell.style.fontSize = `${Math.max(10, sz * 0.55)}px`;
 
-        // Touch handling
-        let longPressTimer = null;
-        let touchMoved = false;
-
-        cell.addEventListener('touchstart', (e) => {
-          touchMoved = false;
-          longPressTimer = setTimeout(() => {
-            if (!touchMoved) {
-              onFlag(r, c);
-              spawnTouchBubbles(e.touches[0]);
-            }
-          }, 500);
-        }, { passive: true });
-
-        cell.addEventListener('touchmove', () => {
-          touchMoved = true;
-          clearTimeout(longPressTimer);
-        }, { passive: true });
+        // Touch handling: single tap = reveal, double tap = flag
+        let lastTap = 0;
 
         cell.addEventListener('touchend', (e) => {
-          clearTimeout(longPressTimer);
-          if (!touchMoved) {
-            if (flagMode) {
-              onFlag(r, c);
-            } else {
-              onTap(r, c);
-            }
-            spawnTouchBubbles(e.changedTouches[0]);
+          e.preventDefault();
+          const now = Date.now();
+          const timeSinceLast = now - lastTap;
+          if (timeSinceLast < 300 && timeSinceLast > 0) {
+            // Double tap — flag
+            onFlag(r, c);
+          } else {
+            // Single tap — reveal (with small delay to allow double tap to cancel)
+            setTimeout(() => {
+              if (Date.now() - lastTap >= 300) onTap(r, c);
+            }, 300);
           }
+          lastTap = now;
+          spawnTouchBubbles(e.changedTouches[0]);
         });
 
         // Desktop fallback
-        cell.addEventListener('click', () => { if (!flagMode) onTap(r, c); else onFlag(r, c); });
+        cell.addEventListener('click', () => onTap(r, c));
         cell.addEventListener('contextmenu', (e) => { e.preventDefault(); onFlag(r, c); });
 
         boardEl.appendChild(cell);
