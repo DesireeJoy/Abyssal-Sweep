@@ -319,7 +319,7 @@
 
 <div class="bubbles" id="bubbles"></div>
 
-<h1>🦑 KRAKEN SWEEP</h1>
+<h1>🐙 KRAKEN SWEEP</h1>
 <p class="subtitle">— The Deep Awaits —</p>
 
 <div class="controls">
@@ -330,7 +330,7 @@
 
 <div class="hud">
   <div class="hud-item">
-    <span class="hud-label">🦑 Lurking</span>
+    <span class="hud-label">🐙 Lurking</span>
     <span class="hud-value" id="mine-count">10</span>
   </div>
   <button id="reset-btn" title="New Game" onclick="initGame()">🌊</button>
@@ -345,16 +345,15 @@
 </div>
 
 <div class="legend">
-  <span>🍗 Right-click = Keep his attention with a treat</span>
-  <span>🦑 = Lurking Kraken</span>
-  <span>💀 = Revealed Kraken</span>
+  <span>🍖 Right-click = Keep his attention with a treat</span>
+  <span>🐙 = Hap Kraken</span>
 </div>
 
 <canvas id="tentacle-canvas"></canvas>
 
 <div class="message-overlay" id="overlay">
   <div class="message-box">
-    <div class="message-icon" id="msg-icon">🦑</div>
+    <div class="message-icon" id="msg-icon">🐙</div>
     <div class="message-title" id="msg-title">CONSUMED!</div>
     <div class="message-sub" id="msg-sub">The Kraken claims another sailor.</div>
     <button class="play-again-btn" onclick="closeOverlay()">Brave the Depths Again</button>
@@ -487,7 +486,7 @@
     const cell = getCell(r, c);
     if (flagged[r][c]) {
       cell.classList.add('flagged');
-      cell.textContent = '🦴';
+      cell.textContent = '🍖';
     } else {
       cell.classList.remove('flagged');
       cell.textContent = '';
@@ -521,7 +520,7 @@
     const cell = getCell(hitR, hitC);
     cell.classList.remove('hidden');
     cell.classList.add('mine-hit');
-    cell.textContent = '🦑';
+    cell.textContent = '🐙';
 
     setTimeout(() => {
       mineLocations.forEach(([r, c]) => {
@@ -530,12 +529,12 @@
         if (!flagged[r][c]) {
           mc.classList.remove('hidden', 'flagged');
           mc.classList.add('revealed', 'mine-revealed');
-          mc.textContent = '🦑';
+          mc.textContent = '🐙';
         }
       });
 
       spawnTentacles();
-      document.getElementById('msg-icon').textContent = '🦑';
+      document.getElementById('msg-icon').textContent = '🐙';
       document.getElementById('msg-title').textContent = 'CAUGHT!';
       document.getElementById('msg-sub').textContent = `The Kraken got you after ${seconds}s — but he's happy about it!`;
       document.getElementById('overlay').classList.add('show');
