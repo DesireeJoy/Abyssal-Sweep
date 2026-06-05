@@ -1,4 +1,4 @@
-const CACHE = 'abyssal-sweep-v1';
+const CACHE = 'abyssal-sweep-v2';
 const ASSETS = [
   '/Abyssal-Sweep/mobile.html',
   '/Abyssal-Sweep/manifest.json',
