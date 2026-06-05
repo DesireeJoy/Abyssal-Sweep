@@ -346,16 +346,17 @@
 
 <div class="legend">
   <span>🍖 Right-click = Keep his attention with a treat</span>
-  <span>🐙 = Hap Kraken</span>
+  <span>🦑 = Lurking Kraken</span>
+  <span>🐙 = Happy Kraken</span>
 </div>
 
 <canvas id="tentacle-canvas"></canvas>
 
 <div class="message-overlay" id="overlay">
   <div class="message-box">
-    <div class="message-icon" id="msg-icon">🐙</div>
-    <div class="message-title" id="msg-title">CONSUMED!</div>
-    <div class="message-sub" id="msg-sub">The Kraken claims another sailor.</div>
+    <div class="message-icon" id="msg-icon">🦑</div>
+    <div class="message-title" id="msg-title">REJECTED!</div>
+    <div class="message-sub" id="msg-sub">You Went in for Pets Too Soon. The Kraken has rejected you.</div>
     <button class="play-again-btn" onclick="closeOverlay()">Brave the Depths Again</button>
   </div>
 </div>
@@ -534,7 +535,7 @@
       });
 
       spawnTentacles();
-      document.getElementById('msg-icon').textContent = '🐙';
+      document.getElementById('msg-icon').textContent = '🦑';
       document.getElementById('msg-title').textContent = 'CAUGHT!';
       document.getElementById('msg-sub').textContent = `The Kraken got you after ${seconds}s — but he's happy about it!`;
       document.getElementById('overlay').classList.add('show');
